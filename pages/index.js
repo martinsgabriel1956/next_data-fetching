@@ -1,3 +1,9 @@
 export default function Home() {
-  return <h1>Hello World!</h1>
+  return (
+    <ul>
+      <li>Product 1</li>
+      <li>Product 2</li>
+      <li>Product 3</li>
+    </ul>
+  )
 }
