@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 export default function LastSales(props) {
-  const [sales, setSales] = useState();
+  const [sales, setSales] = useState(props.sales);
   // const [loading, setLoading] = useState(false);
 
   const { data, error } = useSWR(
@@ -27,29 +27,18 @@ export default function LastSales(props) {
 
   // useEffect(() => {
   //   setLoading(true);
-  //   fetch("https://next-sales-96bdf-default-rtdb.firebaseio.com/sales.json")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       const transformedSales = [];
-
-  //       for (const key in data) {
-  //         transformedSales.push({
-  //           id: key,
-  //           username: data[key].username,
-  //           volume: data[key].volume,
-  //         });
-  //       }
+  //
 
   //       setSales(transformedSales);
   //       setLoading(false);
-  //     });
+  //
   // }, []);
 
   if (error) {
     return <p>No data yet</p>;
-  } 
+  }
 
-  if (!data || !sales) {
+  if (!data && !sales) {
     return <p>Loading...</p>;
   }
 
@@ -62,4 +51,26 @@ export default function LastSales(props) {
       ))}
     </ul>
   );
+}
+
+export async function getStaticProps() {
+  const res = await fetch(
+    "https://next-sales-96bdf-default-rtdb.firebaseio.com/sales.json"
+  );
+  const data = await res.json();
+  const transformedSales = [];
+
+  for (const key in data) {
+    transformedSales.push({
+      id: key,
+      username: data[key].username,
+      volume: data[key].volume,
+    });
+  }
+
+  return {
+    props: {
+      sales: transformedSales,
+    },
+  };
 }
